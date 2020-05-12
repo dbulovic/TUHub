@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\title {Theoretical Computer Science: Exercise 2}
+\author {David Bulovic 11819382}
+\date {}
+
+\begin{document}
+\maketitle
+Using the Pumping Lemma, show that: the language \begin{math} L = {0^i1^j0^{ij} | i, j \in \mathbb{N} } \\for \sum = {0, 1} \end{math} 
+is not regular.\\ \par
+To solve this problem I will use the proof by contradiction. First, we assume that L is regular and let \textit{p} be the pumping
+length of L given by the Pumping Lemma. Now we can set a string: 
+\begin{equation*}
+x = 0^p10^p
+\end{equation*}
+It is clear that \textit{x} is a member of L, where \begin{math} i = p, j = 1 \end{math}. Since x is longer than pumping length \textit{p},
+according to the Pumping Lemma we can split x into three parts \begin{math} x = uvw \end{math} where: 
+\begin{equation} 
+|v| \geq 1
+\end{equation}
+\begin{equation}
+|uv| \leq p
+\end{equation}
+\begin{equation}
+uv^nw \in L, \forall n \in \mathbb{N}
+\end{equation} \par
+From (1) and (2) we can conclude that \begin{math} 1 \leq |v| \leq p \end{math}. Since \begin{math} x = 0^p10^p \end{math} the first p symbols of
+\textit{x} are 0s. Therefore, u and v must consist entirely of 0s. \\First possibility is that \textit{u} is an empty string,
+\begin{math} v = 0^p \end{math} and \begin{math} w = 10^p \end{math}. However this case does not satisy (3). For example, if 
+\begin{math} n = 2 \end{math}, then we can see that the string: \begin{math} uv^2w = 0^p0^p10^p \end{math} clearly is not a member of L. \\ \par
+
+Second possibility is that \begin{math} |u| \geq 1 \end{math} and \begin{math} |v| < p \end{math}. Similarly, this case also does not satisy (3).
+If \begin{math} n = p \end{math}, then the string: \begin{math} uv^pw \end{math} would have a far greater number of 0s in the first part before the
+1, regardless of the distribution of 0s between \textit{u} and \textit{v}, therefore it also cannot be a member of L. \\ \par
+
+Since for all possible segmentations \begin{math} x = uvw, \exists n \end{math} so that 
+\begin{math} uv^nw \end{math} is not a member of L. Therefore, we can conclude that L is not regular, as per the Pumping Lemma.
+
+\end{document}
