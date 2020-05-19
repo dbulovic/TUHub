@@ -1,6 +1,6 @@
 -- (a)
 -- Q09:
--- old
+-- old:
 -- SELECT I.Name FROM Institutions I WHERE I.CoKey IN(
 -- SELECT CoKey FROM Countries C WHERE C.Name = 'Germany' OR C.Name = 'Austria');
 -- new:
@@ -22,6 +22,7 @@ WHERE I.CoKey = C.CoKey AND (C.Name = 'Germany' OR C.Name = 'Austria');
 --          ->  Seq Scan on countries c  (cost=0.00..2.02 rows=2 width=4)
 --                Filter: (((name)::text = 'Germany'::text) OR ((name)::text = 'Austria'::text))
 
+-- As we can see, even though the query is unnested, the plans are the same.
 
 
 
@@ -63,12 +64,14 @@ WHERE P.Akey = T.Akey AND T.Year < 2020 AND T.Year >= 2018;
 --                Filter: ((year < 2020) AND (year >= 2018))
 
 
+-- The plan for the rewritten query is much shorter. This is because it only performs SELECT once, as opposed to the original query.
+-- There is much less work to do (e.g. fewer searches), which makes it much faster.
+
+
 -- (c)
 -- create index
 CREATE INDEX idx_thesis_year
 ON Theses (Year);
-
--- As opposed to a seq scan on thesis we have a bitmap heap scan
 
 --  Hash Join  (cost=65.84..869.45 rows=314 width=14)
 --    Hash Cond: (p.akey = t.akey)
@@ -86,3 +89,6 @@ ON Theses (Year);
 --                Recheck Cond: ((year < 2020) AND (year >= 2018))
 --                ->  Bitmap Index Scan on idx_thesis_year  (cost=0.00..11.42 rows=314 width=0)
 --                      Index Cond: ((year < 2020) AND (year >= 2018))
+
+
+-- As opposed to a seq scan on thesis we have a bitmap heap scan.

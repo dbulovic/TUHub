@@ -35,5 +35,5 @@ COMMIT;
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 INSERT INTO R VALUES (6, 9);
 COMMIT;
--- Here isolation level is set to less strict Repetable Read. Therefore phantom read is possible.
+-- Here isolation level is set to the less strict Repetable Read. Therefore phantom read is possible.
 -- If the second transaction was executed between the two SELECTs of the first transaction, the results in aver1 and aver2 tables would be different.
