@@ -15,17 +15,16 @@ M is a 1-band TM and M does not modify the part of the band where the input w is
 is not decidable. \\
 
 Let us assume that X is decidable and let R be the Turing machine that decides X. Now, we can create a Turing machine 
-S that decides A\textsubscript{TM}
-\footnote{A\textsubscript{TM} \begin{math} = \{ \langle T,w \rangle | \end{math} T is a TM and T accepts w\}}:
+S that decides A\textsubscript{TM}\footnote{A\textsubscript{TM} \begin{math} = \{ \langle T,w \rangle | \end{math} T is a TM and T accepts w\}}.
 The construction of S is the following:
 \begin{itemize}
 \item The input is \begin{math}\langle M,w \rangle\end{math}, M being a Turing Machine and w being a string.
 \item Now, we create a new Turing Machine M' using the following steps:
 \begin{itemize}
-\item The input is code X
-\item Run M with input w, without editing the input X
+\item The input is code y
+\item Run M with input w, without editing the input y
 \item If M accepts, M' accepts
-\item Otherwise delete the input string x and write 1 and reject
+\item Otherwise delete the input string y and write 1 and reject
 \end{itemize}
 \item Now run R with M' as input
 \item S accepts if R accepts, S rejects if R rejects
