@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title {Theoretical Computer Science: Exercise 3 - Reductions}
+\author {David Bulovic}
+\date {}
+
+\begin{document}
+\maketitle
+
+Show that the language: \\
+\begin{math} X = \{ \langle M,w \rangle | \end{math} 
+M is a 1-band TM and M does not modify the part of the band where the input w is\} 
+is not decidable. \\
+
+Let us assume that X is decidable and let R be the Turing machine that decides X. Now, we can create a Turing machine 
+S that decides A\textsubscript{TM}
+\footnote{A\textsubscript{TM} \begin{math} = \{ \langle T,w \rangle | \end{math} T is a TM and T accepts w\}}:
+The construction of S is the following:
+\begin{itemize}
+\item The input is \begin{math}\langle M,w \rangle\end{math}, M being a Turing Machine and w being a string.
+\item Now, we create a new Turing Machine M' using the following steps:
+\begin{itemize}
+\item The input is code X
+\item Run M with input w, without editing the input X
+\item If M accepts, M' accepts
+\item Otherwise delete the input string x and write 1 and reject
+\end{itemize}
+\item Now run R with M' as input
+\item S accepts if R accepts, S rejects if R rejects
+\end{itemize}
+If M accepts w, M' will not modify the input (which means it will be accepted by R). If M does not accept w, M' will modify the input
+(it will be rejected by R). This means that R will accept M' if and only if M accepts w. Consequently, S decides A\textsubscript{TM}.\\
+
+However, since we know that A\textsubscript{TM} is undecidable, S cannot exists. 
+Due to this contradiction R cannot exist either, so X must be undecidable.
+
+
+\end{document}
