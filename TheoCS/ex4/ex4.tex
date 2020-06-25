@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title {Theoretical Computer Science\\Exercise 4 - NP and NP-Completeness}
+\author {David Bulovic 11819382}
+
+\begin{document}
+\maketitle
+
+Showing that the language: \\
+\textit{DoppelSAT} \begin{math} = \{ \langle \phi \rangle\end{math} \begin{math}|\end{math} \begin{math}\phi \end{math}
+is a Boolean formula and \begin{math} \phi \end{math} has at least two satisfiable variable assignments.\} is NP-Complete. \\
+
+(1) First to establish that \textit{DoppelSAT} \begin{math} \in \end{math} NP, we show that we can verify a solution in polynomial time:
+\begin{itemize}
+\item Check the evaluation result of \begin{math} \phi \end{math} for all variable assignments.
+\item If \begin{math} \phi \end{math} evaluates to TRUE in 2 or more assignments accept, otherwise reject.
+\end{itemize} 
+
+(2) Next, to show that we can reduce \textit{SAT}\footnote{\begin{math} SAT = \{ \langle \phi \rangle \end{math} \begin{math}|\end{math} \begin{math}\phi \end{math}
+is a satisfiable Boolean formula.\}} to \textit{DoppelSAT}:
+\begin{itemize}
+\item Let x\textsubscript{0}, x\textsubscript{1}, x\textsubscript{2}, ... , x\textsubscript{n}
+be the results of \begin{math} \phi \end{math} for first, second, ... , n-th variable assignment respectively.
+\item Let \begin{math} \phi ' \end{math} be a Boolean formula 
+\item Next, let \begin{math} \phi ' = (x\textsubscript{0} \land x\textsubscript{1}) \lor (x\textsubscript{0} \land x\textsubscript{2}) \lor 
+(x\textsubscript{0} \land x\textsubscript{3}) \lor ... \lor (x\textsubscript{n-1} \land x\textsubscript{n}) \end{math}
+\item Polynomial time reduction is:
+\begin{math}
+f\langle \phi \rangle = \phi '
+\end{math}
+\end{itemize}
+Now we can show that: \begin{math} \phi \in {DoppelSAT} \iff \phi ' \in SAT\end{math}. This is because \begin{math} \phi ' \end{math} is formed so that
+the results of \begin{math} \phi \end{math} are paired each with each in a way that the result of \begin{math} \phi ' \end{math} is TRUE if and only if
+two of its inputs (i.e. outputs of \begin{math} \phi \end{math}) are TRUE. And the other way around, if \begin{math} \phi \end{math} evaluates to 
+TRUE for at least two variable assignments it is a part of \textit{DoppelSAT} (by definition) and \begin{math} \phi '\end{math} is a part of 
+\textit{SAT} (as explained before).\\
+
+From (1) and (2) we can conclude that \textit{DoppelSAT} is NP-Complete.
+\end{document}
