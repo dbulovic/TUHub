@@ -301,8 +301,9 @@ int main()
   {
     pthread_join(enemy_snake_tid[i], &rvalue_enemies[i]);
   }
-  
-  pthread_exit(&rvalue_user_snake);
+
+  pthread_cancel(user_snake_tid);
+  pthread_join(user_snake_tid, &rvalue_user_snake);
 
 
   //TODO: END
