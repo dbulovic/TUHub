@@ -33,7 +33,8 @@ void *snake()
 
   //TODO BEGIN:
 
-  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  int old_type;
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old_type);
 
   //TODO END:
 
@@ -91,7 +92,7 @@ void *snake()
         game_map[user_snake_pos.y_b_][user_snake_pos.x_b_] == (char) CHEST_A) )
     {
       //TODO: begin
-      points++;
+      points += POINTS_CHEST_A;
       pthread_cancel(chest_tid);
       //TODO: end
       chest_collected_flag = 1;
@@ -115,19 +116,17 @@ void *enemySnakes(void* params)
 
   //TODO: Begin
   
-  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+  int old_type;
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old_type);
 
+    
+  unsigned char position_x_f = ((parameters *)params)->pos_x_ ;
+  unsigned char position_y_f = ((parameters *)params)->pos_y_ ;
+  unsigned char enemy_type = ((parameters *)params)->type_ ;
+
+  //free(params);
+  // how to free?!
   
-  parameters *en_params = (parameters *) params;
-
-  unsigned char position_x_f = en_params->pos_x_ ;
-  unsigned char position_y_f = en_params->pos_y_ ;
-  unsigned char enemy_type = en_params->type_ ;
-
-  free(params);
-
-
-
   //TODO: END
 
   position enemy_snake_pos = {position_x_f, position_y_f, position_x_f +1, position_y_f, position_x_f +2, position_y_f};
@@ -195,20 +194,13 @@ void init_enemies(int pid_pos, unsigned char pos_x_, unsigned char pos_y_,
 
   //TODO BEGIN
 
-
   parameters *enemy_params = (parameters*)malloc(sizeof(parameters));
-
-
-  // parameters enemy_params;
   
   enemy_params->pos_x_ = pos_x_;
   enemy_params->pos_y_ = pos_y_;
   enemy_params->type_ = type_;
 
-
   pthread_create(&enemy_snake_tid[pid_pos], NULL, enemySnakes, (void*)enemy_params);
-
-  
   
   //TODO: END
 }
@@ -216,7 +208,9 @@ void *placeChests()
 {
   //TODO BEGIN:
   // -set the the threads cancelability type to a type where it can be canceled at ANY time (look at the manpage)
-  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+
+  int old_type;
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &old_type);
 
   //TODO END
 
@@ -243,9 +237,8 @@ int main()
   // -look at the pthread_t variables from above... USE one of them!!
 
   //TODO BEGIN
+
   pthread_create(&user_snake_tid, NULL, snake, NULL);
-  
-  
 
   //TODO END
 
@@ -285,7 +278,6 @@ int main()
         pthread_create(&chest_tid, NULL, placeChests, NULL);
         chest_collected_flag = 0;
       }     
-
       
       //TODO: END
 
@@ -297,21 +289,21 @@ int main()
   // - have a closer look on the other TODOs too there are connections
 
   //TODO: BEGIN
+
   for (int i = 0; i < NUMBER_ENEMIES; i++)
   {
     pthread_join(enemy_snake_tid[i], &rvalue_enemies[i]);
   }
 
+  pthread_cancel(chest_tid);
+  pthread_join(chest_tid, &rvalue_chest);
+
   pthread_cancel(user_snake_tid);
   pthread_join(user_snake_tid, &rvalue_user_snake);
-
 
   //TODO: END
 
 
   return end_game(rvalue_user_snake, rvalue_enemies, rvalue_chest);
 }
-
-
-
 
