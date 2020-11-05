@@ -53,12 +53,10 @@ res = linprog(c, A_ub=A, b_ub=b, method='interior-point')
 results = [0 for i in range(24)]
 for i in range(24):
     results[i] = round(res.x[i])
-print(results[0:8])
-print(results[8:16]) 
-print(results[16:24]) 
+
+for j in range(3):
+    for i in range(8):
+        print("%5d" % (results[8*j+i]), end='')
+    print("")
 
 print(res.fun)
-# print('Optimal value:', round(res.fun, ndigits=2),
-#       '\nx values:', res.x,
-#       '\nNumber of iterations performed:', res.nit,
-#       '\nStatus:', res.message)
