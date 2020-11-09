@@ -1,3 +1,5 @@
+# David Bulovic 11819382
+# Group 56
 import numpy as np
 from scipy.optimize import linprog
 
