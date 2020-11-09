@@ -1,9 +1,8 @@
-# Import required libraries
 import numpy as np
 from scipy.optimize import linprog
 
-# Set the inequality constraints matrix
-# Note: the inequality constraints must be in the form of <=
+
+
 A = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
               [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
               [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
@@ -12,6 +11,7 @@ A = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
               [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
               [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0],
               [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+            #matrices to sum how much each store buys
 
               [-1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0],
               [0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0],
@@ -21,18 +21,21 @@ A = np.array([[1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
               [0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0],
               [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0],
               [0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, -1],
+            #the same but constraints have to be in form <=, so here multiplied by -1
 
 
               [1 for i in range(24)],
               [-1 for i in range(24)],
+            #total sum of number of bought items
+
 
               [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
               [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+            #how much each distributor sold
 
               ])
 
-# Set the inequality constraints vector
 b = np.array([800, 800, 800, 800, 800, 800, 800, 800,
              -640, -640, -640 , -640 , -640 , -640 , -640, -640,
              5600, 
@@ -40,23 +43,24 @@ b = np.array([800, 800, 800, 800, 800, 800, 800, 800,
              2000, 2200, 1400
              ])
 
-# Set the coefficients of the linear objective function vector
+
 c = np.array([0.11, 0.14, 0.08, 0.13, 0.10, 0.11, 0.11, 0.12,
               0.10, 0.12, 0.07, 0.09, 0.08, 0.15, 0.09, 0.18,
               0.09, 0.10, 0.10, 0.11, 0.09, 0.16, 0.07, 0.14
             ])
 
-# Solve linear programming problem
-res = linprog(c, A_ub=A, b_ub=b, method='interior-point')
 
-# Print results
+result = linprog(c, A_ub=A, b_ub=b, method='interior-point')
+
+
+# rounding to integers
 results = [0 for i in range(24)]
 for i in range(24):
-    results[i] = round(res.x[i])
+    results[i] = round(result.x[i])
 
 for j in range(3):
     for i in range(8):
         print("%5d" % (results[8*j+i]), end='')
     print("")
 
-print(res.fun)
+print(result.fun)
