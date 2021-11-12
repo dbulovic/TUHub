@@ -1,0 +1,388 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{indentfirst}
+
+\title{Numerical Optimization Assignment 1}
+\author{David Bulovic, Marko Rajic}
+\date{November 2021}
+
+\begin{document}
+
+\maketitle
+
+\section{Task1: Characterization of Functions}
+\textbf{a)} $f(\boldsymbol{x}) = (\boldsymbol{a}^T \boldsymbol{x} - d)^2$ where $\boldsymbol{a} = \begin{pmatrix}-1 & 3\end{pmatrix}^T d = 2.5$.\\
+Inserting the values into the equation:
+\begin{equation*}
+    f(\boldsymbol{x}) = (\begin{pmatrix}-1 & 3\end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} - 2.5)^2
+\end{equation*}
+Performing the matrix multiplication:
+\begin{equation*}
+    f(\boldsymbol{x}) = (-x_1 + 3x_2 - 2.5)^2
+\end{equation*}
+We know that the gradient is given by:
+\begin{equation*}
+    \nabla f = \begin{pmatrix} \frac{\partial f}{\partial x_1}\\ \frac{\partial f}{\partial x_2}\end{pmatrix}
+\end{equation*}
+Calculating the partial derivatives gives us:
+\begin{equation*}
+    \frac{\partial f}{\partial x_1} = -2(-x_1 + 3x_2 -2.5)
+\end{equation*}
+\begin{equation*}
+    \frac{\partial f}{\partial x_2} = 6(-x_1 + 3x_2 -2.5)
+\end{equation*}
+Therefore:
+\begin{equation*}
+    \nabla f = \begin{pmatrix} -2(-x_1 + 3x_2 -2.5)\\ 6(-x_1 + 3x_2 -2.5)\end{pmatrix}
+\end{equation*}
+The Hessian matrix is given by:
+\begin{equation*}
+    Hess(f) = \begin{pmatrix} \frac{\partial ^2 f}{\partial x_1^2} & \frac{\partial ^2 f}{\partial x_1x_2}\\ \frac{\partial ^2 f}{\partial x_2^2} & \frac{\partial ^2 f}{\partial x_2x_1}\end{pmatrix}
+\end{equation*}
+Calculating the second order partial derivatives gives us:
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1^2} = 2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1x_2} = -6
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2x_1} = -6
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2^2} = 18
+\end{equation*}
+And finally:
+\begin{equation*}
+    Hess(f) = \begin{pmatrix} 2 & -6 \\ -6 & 18 \end{pmatrix}
+\end{equation*}
+Since the two partial derivative equations:
+\begin{equation*}
+    -2(-x_1 + 3x_2 -2.5) = 0
+\end{equation*}
+\begin{equation*}
+     6(-x_1 + 3x_2 -2.5) = 0
+\end{equation*}
+are linearly codependent, there are infinitely many stationary points on the line:
+\begin{equation*}
+    x_2 = \frac{1}{6}(2x_1 + 5)
+\end{equation*}
+
+\textbf{b)} $f(\boldsymbol{x}) = (x_1 - 2)^2 + x_1x_2^2 - 2$\\
+Expanding the equation:
+\begin{equation*}
+    f(\boldsymbol{x}) = x_1^2 - 4x_1 + 4 + x_1x_2^2 - 2
+\end{equation*}
+Calculating the partial derivatives gives us:
+\begin{equation*}
+    \frac{\partial f}{\partial x_1} = 2x_1 - 4 + x_2^2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial f}{\partial x_2} = 2x_1x_2
+\end{equation*}
+Therefore the gradient is:
+\begin{equation*}
+    \nabla f = \begin{pmatrix} 2x_1 - 4 + x_2^2\\ 2x_1x_2\end{pmatrix}
+\end{equation*}
+Calculating the second order partial derivatives gives us:
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1^2} = 2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1x_2} = 2x_2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2^2} = 2x_1
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2x_1} = 2x_2
+\end{equation*}
+And finally:
+\begin{equation}
+\label{1b_hess}
+    Hess(f) = \begin{pmatrix} 2 & 2x_2 \\ 2x_2 & 2x_1 \end{pmatrix}
+\end{equation}
+To find the stationary points we set the gradient functions to 0:
+\begin{equation*}
+    2x_1 - 4 + x_2^2 = 0
+\end{equation*}
+\begin{equation*}
+    2x_1x_2 = 0
+\end{equation*}
+Solving the first equation for $x_1$ and inserting it in the second we get:
+\begin{equation}
+\label{1b_for_x1}
+    x_1 = \frac{4-x_2^2}{2}
+\end{equation}
+\begin{equation*}
+    2 \frac{4-x_2^2}{2} x_2 = 0
+\end{equation*}
+\begin{equation*}
+    4x_2 - x_2^3 = 0
+\end{equation*}
+\begin{equation*}
+    x_2(2-x_2)(2+x_2) = 0
+\end{equation*}
+Therefore the solutions for $x_2$ are 0, 2, and -2. Inserting these values into equation \eqref{1b_for_x1} we get the following set of values:
+\begin{equation*}
+    \{(2,0), (0,2), (0, -2)\}
+\end{equation*}
+If we insert these values into the Hessian matrix \eqref{1b_hess} and calculate the determinant we get, for (2,0):
+\begin{equation*}
+\begin{vmatrix}
+    2 & 2*0\\ 2*0 & 2*2 
+\end{vmatrix}
+= 8 - 0 = 8
+\end{equation*}
+for (0,2):
+\begin{equation*}
+\begin{vmatrix}
+    2 & 2*2\\ 2*2 & 2*0 
+\end{vmatrix}
+= 0 - 16 = -16
+\end{equation*}
+for (0,-2):
+\begin{equation*}
+\begin{vmatrix}
+    2 & 2*(-2)\\ 2*(-2) & 2*0 
+\end{vmatrix}
+= 0 - 16 = -16
+\end{equation*}
+Because the determinant for the point (2, 0) is positive, and:
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1^2} = 2 > 0
+\end{equation*}
+We can conclude that the point (2, 0) is a minimum. The other two stationary points (0, 2) and (0, -2) are saddle points, because the determinants of the Hessian matrix at those points are negative. \\
+
+\textbf{c)} $f(\boldsymbol{x}) = x_1^2 + x_1||\boldsymbol{x}||^2 + ||\boldsymbol{x}||^2$, where $||\boldsymbol{x}||$ is the \textit{l}2-norm.\\
+Expanding the function for the norm:
+\begin{equation*}
+    f(\boldsymbol{x}) = x_1^2 + x_1 \sqrt{x_1^2 + x_2^2}^2 + \sqrt{x_1^2 + x_2^2}^2
+\end{equation*}
+Square roots and the powers of 2 cancel out:
+\begin{equation*}
+    f(\boldsymbol{x}) = x_1^2 + x_1(x_1^2 + x_2^2) + x_1^2 + x_2^2
+\end{equation*}
+\begin{equation*}
+    f(\boldsymbol{x}) = x_1^2 + x_1^3 + x_1x_2^2 + x_1^2 + x_2^2
+\end{equation*}
+\begin{equation*}
+    f(\boldsymbol{x}) = x_1^3 + 2x_1^2 + x_1x_2^2 + x_2^2
+\end{equation*}
+From here, we can find the partial derivatives:
+\begin{equation*}
+    \frac{\partial f}{\partial x_1} = 3x_1^2 + 4x_1 + x_2^2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial f}{\partial x_1} = 2x_1x_2 + 2x_2
+\end{equation*}
+Therefore the gradient is:
+\begin{equation*}
+    \nabla f = \begin{pmatrix} 3x_1^2 + 4x_1 + x_2^2\\ 2x_1x_2 + 2x_2\end{pmatrix}
+\end{equation*}
+Calculating the second order partial derivatives gives us:
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1^2} = 6x_1 + 4
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1x_2} = 2x_2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2^2} = 2x_1 + 2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2x_1} = 2x_2
+\end{equation*}
+And finally:
+\begin{equation}
+\label{1c_hess}
+    Hess(f) = \begin{pmatrix} 6x_1 + 4 & 2x_2 \\ 2x_2 & 2x_1 + 2 \end{pmatrix}
+\end{equation}
+Setting the partial derivatives to 0:
+\begin{equation*}
+    3x_1^2 + 4x_1 + x_2^2 = 0
+\end{equation*}
+\begin{equation*}
+    2x_1x_2 + 2x_2 = 0
+\end{equation*}
+We can reform the second equation:
+\begin{equation*}
+    2x_2(x1 + 1) = 0
+\end{equation*}
+Which means partial solutions are: $x_2 = 0$ and $x_1 = -1$. We can insert $x_1 - -1$ into the first equation to get:
+\begin{equation*}
+    3 - 4 + x_2^2 = 0
+\end{equation*}
+\begin{equation*}
+    x_2^2 = 1
+\end{equation*}
+\begin{equation*}
+    x_2 = -1, 1
+\end{equation*}
+Which means the first set of stationary points is: (-1, 1) and (-1, -1). Inserting $x_2 = 0$ into the first equation:
+\begin{equation*}
+    3x_1^2 + 4x_1 = 0
+\end{equation*}
+\begin{equation*}
+    x_1(3x_1 + 4) = 0
+\end{equation*}
+\begin{equation*}
+    x_1 = 0, -\frac{4}{3}
+\end{equation*}
+The rest of the stationary points are: (0, 0) and (-$\frac{4}{3}$, 0)
+Inserting these values into the hessian matrix \eqref{1c_hess} we get, for (-1 ,1):
+\begin{equation*}
+    \begin{vmatrix}
+        6*(-1) + 4 & 2*1 \\ 2*1 & 2*(-1) + 2
+    \end{vmatrix} = (-2)*0 - 4 = -4
+\end{equation*}
+for (-1, -1):
+\begin{equation*}
+    \begin{vmatrix}
+        6*(-1) + 4 & 2*(-1) \\ 2*(-1) & 2*(-1) + 2
+    \end{vmatrix} = (-2)*0 - 4 = -4
+\end{equation*}
+for (0, 0):
+\begin{equation*}
+    \begin{vmatrix}
+        6*0 + 4 & 2*0 \\ 2*0 & 2*0 + 2
+    \end{vmatrix} = 4 * 2 - 0 = 8
+\end{equation*}
+and for ($-\frac{4}{3}$, 0):
+\begin{equation*}
+    \begin{vmatrix}
+        6*-\frac{4}{3} + 4 & 2*0 \\ 2*0 & 2*-\frac{4}{3} + 2
+    \end{vmatrix} = -4 * (-\frac{8}{3} + 2) = -4 *(-\frac{2}{3}) = \frac{8}{3}
+\end{equation*}
+Since the determinants at points (-1, 1) and (-1, -1) are negative, these are saddle points. The point (0, 0) is a minimum, because the determinant is positive and 
+\begin{equation}
+\label{1c_spd}
+    \frac{\partial^2 f}{\partial x_1^2} = 6x_1 + 4 
+\end{equation}
+at point (0, 0) equals: $4$, which is positive. Therefore this point is a minimum. For point ($-\frac{4}{3}$,0) the determinant is positive and the value of the second partial derivative \eqref{1c_spd} is -4. Therefore the point ($-\frac{4}{3}$,0) is a maximum.\\
+
+\textbf{d)} $f(\boldsymbol{x}) = \alpha x_1^2 - 2x_1 + \beta x_2^2$\\
+We can find the partial derivatives:
+\begin{equation*}
+    \frac{\partial f}{\partial x_1} = 2\alpha x_1 - 2
+\end{equation*}
+\begin{equation*}
+    \frac{\partial f}{\partial x_1} = 2\beta x_2
+\end{equation*}
+Therefore the gradient is:
+\begin{equation*}
+    \nabla f = \begin{pmatrix} 2\alpha x_1 - 2\\ 2\beta x_2\end{pmatrix}
+\end{equation*}
+Calculating the second order partial derivatives gives us:
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1^2} = 2\alpha
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_1x_2} = 0
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2^2} = 2\beta
+\end{equation*}
+\begin{equation*}
+    \frac{\partial ^2 f}{\partial x_2x_1} = 0
+\end{equation*}
+And finally:
+\begin{equation*}
+    Hess(f) = \begin{pmatrix} 2\alpha & 0\\ 0 & 2\beta \end{pmatrix}
+\end{equation*}
+Setting the gradient to 0:
+\begin{equation*}
+    2\alpha x_1 - 2 = 0 
+\end{equation*}
+\begin{equation*}
+    2\beta x_2 = 0
+\end{equation*}
+It is not difficult to see that the solution $(x_1,x_2) = (\frac{1}{\alpha}$, 0), where $\alpha \neq 0$. Depending on the values of $\alpha$ and $\beta$ this point changes its characteristic:
+\begin{equation*}
+    \text{If } \alpha > 0 \text{ and } \beta > 0 \text{ then the point } (\frac{1}{\alpha}, 0) \text{ is a minimum.}
+\end{equation*}
+\begin{equation*}
+    \text{If } \alpha < 0 \text{ and } \beta > 0 \text{ then the point } (\frac{1}{\alpha}, 0) \text{ is a saddle point.}
+\end{equation*}
+\begin{equation*}
+    \text{If } \alpha > 0 \text{ and } \beta < 0 \text{ then the point } (\frac{1}{\alpha}, 0) \text{ is a saddle point.}
+\end{equation*}
+\begin{equation*}
+    \text{If } \alpha < 0 \text{ and } \beta < 0 \text{ then the point } (\frac{1}{\alpha}, 0) \text{ is a maximum.}
+\end{equation*}
+
+\newpage
+\section{Task4: Scheduling Optimization Problem}
+(a) The linear objective function that we are trying to minimize is:
+\begin{equation}
+\label{tpc}
+\begin{split}
+    z = &0.11x_{1,1} + 0.13x_{2,1} + 0.09x_{3,1} + 0.12x_{4,1} + \\
+    &0.15x_{5,1} + 0.14x_{6,1} + 0.11x_{7,1} + 0.12x_{8,1} + \\ 
+    &0.10x_{1,2} + 0.13x_{2,2} + 0.08x_{3,2} + 0.13x_{4,2} + \\
+    &0.14x_{5,2} + 0.14x_{6,2} + 0.09x_{7,2} + 0.13x_{8,2}
+\end{split}
+\end{equation}
+The value z equals the total power consumption and the x values correspond to the number of instructions performed on a PU (CPU or GPU) per process.\\
+
+(b) The first set of constraints ensures that the right number of instructions corresponds to the each of the processes:
+\begin{equation*}
+\begin{split}
+    x_{1, 1} + x_{1, 2} &= 1200\\
+    x_{2, 1} + x_{2, 2} &= 1500\\
+    x_{3, 1} + x_{3, 2} &= 1400\\
+    x_{4, 1} + x_{4, 2} &= 400\\
+    x_{5, 1} + x_{5, 2} &= 1000\\
+    x_{6, 1} + x_{6, 2} &= 800\\
+    x_{7, 1} + x_{7, 2} &= 760\\
+    x_{8, 1} + x_{8, 2} &= 1300
+\end{split}
+\end{equation*}
+Next, we assure that the number of instructions does not exceed the limit for either of the PUs:
+\begin{equation*}
+\begin{split}
+    x_{1, 1} + x_{2, 1} +x_{3, 1} + x_{4, 1} + x_{5, 1} +x_{6, 1} + x_{7, 1} +x_{8, 1} &\leq 4500 \\
+    x_{1, 2} + x_{2, 2} +x_{3, 2} + x_{4, 2} + x_{5, 2} +x_{6, 2} + x_{7, 2} +x_{8, 2} &\leq 4500
+\end{split}
+\end{equation*}
+Finally, we have to satisfy the constraint that at least 40\% of the first three processes has to be executed on the CPU
+\begin{equation*}
+\begin{split}
+    x_{1, 1} &\geq 1200*40\%\\
+    x_{2, 1} &\geq 1500*40\%\\
+    x_{3, 1} &\geq 1400*40\%
+\end{split}
+\end{equation*} \\
+
+(c), (d) Using the python's linear program solver we get the following solution to the problem:
+\begin{equation*}
+\begin{pmatrix}
+    480 & 720 \\
+    1027 & 473 \\
+    560 & 840 \\
+    400 & 0 \\
+    0 & 1000 \\
+    379 & 421\\ 
+    0 & 760\\
+    1300 & 0 
+\end{pmatrix}
+\end{equation*}\\
+
+(e) We can see that the solution satisfies all of the constraints above. The sums of rows fit, the sums of columns do not exceed the limit and at least 40\% of the first three processes is executed on the CPU.\\
+
+(f) Computing the value of $z$ using the equation \eqref{tpc}, which is the total power consumption, we get $z = 961.8$.\\
+
+(g) If we try to introduce the additional constraints, which ensure that the first three and the last process has to be executed completely on the CPU:
+\begin{equation*}
+    \begin{split}
+    x_{1, 1} = 1200\\
+    x_{2, 1} = 1500\\
+    x_{3, 1} = 1400\\
+    x_{8, 1} = 1300
+    \end{split}
+\end{equation*}
+We would get an unsatisfiable problem, because the sum of the instructions required for the processes above is larger than 4500, which is the limit per processing unit.
+
+\end{document}
+
