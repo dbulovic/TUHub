@@ -1,6 +1,8 @@
 import grpc
 import time
 import sys
+from itertools import permutations
+from math import sqrt
 
 sys.path.append('./netcode')
 
@@ -127,34 +129,95 @@ def autoPlay():
     state, status = showGameState()
 
     len = state.board_length
-    client_data = [[b'ff' for i in range(len)], [b'ff' for i in range(len)]]
+
+    win_triangles = findTriangles(len)
+
+    client_data = [[198 for i in range(len)] for i in range(len)]
 
     while(not(isMatchOver(status))):
         state, status = showGameState()
         time.sleep(1)
         if isTurnPlayable(status):
+            for y in range(len):
+                for x in range(y+1):
+                    print(int(x + (y * (y + 1) / 2)))
+                    client_data[y][x] = state.board_data[int(x + (y * (y + 1) / 2))]
+
             turn_x = turn_y = turn_color = 0
+
             for i in range(state.number_of_colors):
                 if state.remaining_stones[i] > 0:
                     turn_color = i
                     break
 
-            i = 0
             xy_found = False
             for y in range(len):
                 for x in range(y + 1):
-                    if state.board_data[i] == 255:
-                        turn_x = x
-                        turn_y = y
-                        xy_found = True
-                        break
-                    i = i+1
-                if(xy_found): break
+                    if client_data[x][y] != 255:
+                        for y1 in range(len):
+                            for x1 in range(y + 1):
+                                if x1 == x and y1 == y:
+                                        continue
+                                if client_data[x1][y1] == client_data[x][y]:
+                                    for y2 in range(len):
+                                        for x2 in range(y + 1):
+                                            pass
+                                            #check permutation
+            
+
+            if(not(xy_found)):
+                for y in range(len):
+                    for x in range(y + 1):
+                        if client_data[x][y] == 255:
+                            for y1 in range(len):
+                                for x1 in range(y + 1):
+                                    if x1 == x and y1 == y:
+                                        continue
+                                    
+                                    for y2 in range(len):
+                                        for x2 in range(y + 1):
+                                            pass
+                                            #check permutation for defence
             print(turn_x, turn_y, turn_color)
             turn = GameTurn(x=turn_x, y=turn_y, color=turn_color)
             state = submitTurn(turn)
 
     pass
+
+def findTriangles(leng):
+
+    cor = [i for i in range(leng**2)]
+
+    per = list(permutations(cor, 3))
+
+    eql = []
+
+    for p in per:
+        tril = list(p)
+        x1 = tril[0] // leng
+        y1 = tril[0] % leng
+        x2 = tril[1] // leng
+        y2 = tril[1] % leng
+        x3 = tril[2] // leng
+        y3 = tril[2] % leng
+
+        if x1 > y1 or x2 > y2 or x3 > y3:
+            continue
+
+        side1 = sqrt((x1 - x2)**2 + (y1-y2)**2)
+        side2 = sqrt((x2 - x3)**2 + (y2-y3)**2)
+        side3 = sqrt((x3 - x1)**2 + (y3-y1)**2)
+
+        tri= [side1, side2, side3]
+        tri.sort()
+
+        if tri[0] < tri[1]+tri[2]:
+            if tri[0] == tri[2]:
+                continue
+            elif tri[1] == tri[2] or tri[1] == tri[0]:
+                if abs(tri[2]**2 - tri[1]**2 - tri[0]**2) < 0.0001:
+                    eql.append([[x1, y1],[x2, y2],[x3, y3]]) 
+    return eql
 
 
 def main():
