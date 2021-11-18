@@ -20,14 +20,18 @@ matchToken = ""
 channel = grpc.insecure_channel('gameserver.ist.tugraz.at:80')
 stub = GameComStub(channel)
 
+won = 0
+lost = 0
+draw = 0
+abort = 0
 
 # Query your userToken to be able to start a new match
-def getUserToken(matr_number, secret):
-    auth = AuthPacket()
-    auth.matr_number = matr_number
-    auth.secret = secret
-    response = stub.GetUserToken(auth)
-    return response.user_token
+# def getUserToken(matr_number, secret):
+#     auth = AuthPacket()
+#     auth.matr_number = matr_number
+#     auth.secret = secret
+#     response = stub.GetUserToken(auth)
+#     return response.user_token
 
 
 # Request a new match for Dozo
@@ -82,12 +86,15 @@ def queryTimeout():
 # I did implement this, but I deleted it because it was not fancy enough.
 def showGameState():
     state, status = queryGameState()
-    len = state.board_length
-    i = 0
-    for y in range(len):
+    leng = state.board_length
+
+    for y in range(leng):
+        offset = leng - y
+        for i in range(offset): print(" ", end='')
         for x in range(y + 1):
-            print(state.board_data[i], end=' ')
-            i = i+1
+            slot = state.board_data[int(x + (y * (y + 1) / 2))]
+            if slot == 255: print("X", end=' ')
+            else: print (slot, end=' ')
         print()
     print()
     return state, status
@@ -103,8 +110,8 @@ def submitTurn(turn):
         exit(1)
     if response.turn_status == TurnStatus.MATCH_OVER:
         print("Match is over.")
-        print(queryGameState().game_status)
-        exit(0)
+        #print(queryGameState().game_status)
+        #exit(0)
     if response.turn_status == TurnStatus.NOT_YOUR_TURN:
         print("This isn't the time to use that!")
     return response.dzo_game_state
@@ -125,62 +132,131 @@ def isTurnPlayable(game_status):
 
 # Query, calculate, submit, repeat, query, calculate, submit, repeat
 def autoPlay():
-    print("TODO: implement autoPlay()")
     state, status = showGameState()
 
-    len = state.board_length
+    leng = state.board_length
 
-    win_triangles = findTriangles(len)
+    win_triangles = findTriangles(leng)
 
-    client_data = [[198 for i in range(len)] for i in range(len)]
+    client_data = [[198 for i in range(leng)] for i in range(leng)]
 
     while(not(isMatchOver(status))):
         state, status = showGameState()
         time.sleep(1)
         if isTurnPlayable(status):
-            for y in range(len):
+            for y in range(leng):
                 for x in range(y+1):
-                    print(int(x + (y * (y + 1) / 2)))
                     client_data[y][x] = state.board_data[int(x + (y * (y + 1) / 2))]
 
             turn_x = turn_y = turn_color = 0
 
-            for i in range(state.number_of_colors):
-                if state.remaining_stones[i] > 0:
-                    turn_color = i
-                    break
-
             xy_found = False
-            for y in range(len):
+            for y in range(leng):
                 for x in range(y + 1):
-                    if client_data[x][y] != 255:
-                        for y1 in range(len):
-                            for x1 in range(y + 1):
+                    if client_data[y][x] != 255:
+                        for y1 in range(leng):
+                            for x1 in range(y1 + 1):
                                 if x1 == x and y1 == y:
                                         continue
-                                if client_data[x1][y1] == client_data[x][y]:
-                                    for y2 in range(len):
-                                        for x2 in range(y + 1):
-                                            pass
-                                            #check permutation
+                                if client_data[y1][x1] == client_data[y][x]:
+                                    index_candid = client_data[y][x]
+                                    for y2 in range(leng):
+                                        for x2 in range(y2 + 1):
+                                            if (x1 == x2 and y1 == y2) or (x == x2 and y == y2):
+                                                continue
+                                            if client_data[y2][x2] == 255:
+                                                if ([[x,y],[x1,y1],[x2,y2]] in win_triangles) and state.remaining_stones[index_candid] > 0:
+                                                    turn_x = x2
+                                                    turn_y = y2
+                                                    turn_color = client_data[y][x]
+                                                    xy_found = True
+                                                    print("off")
+                                            if(xy_found): break
+                                        if(xy_found): break
+                                    if(xy_found): break
+                                if(xy_found): break
+                            if(xy_found): break
+                        if(xy_found): break
+                    if(xy_found): break
+                if(xy_found): break
             
-
+            not_these = []
+            not_these_c = []
             if(not(xy_found)):
-                for y in range(len):
+                for y in range(leng):
                     for x in range(y + 1):
-                        if client_data[x][y] == 255:
-                            for y1 in range(len):
-                                for x1 in range(y + 1):
+                        if client_data[y][x] != 255:
+                            for y1 in range(leng):
+                                for x1 in range(y1 + 1):
                                     if x1 == x and y1 == y:
                                         continue
-                                    
-                                    for y2 in range(len):
-                                        for x2 in range(y + 1):
-                                            pass
-                                            #check permutation for defence
+                                    if client_data[y1][x1] == 255:                                    
+                                        for y2 in range(leng):
+                                            for x2 in range(y2 + 1):
+                                                if client_data[y2][x2] == 255 and [[x,y],[x1,y1],[x2,y2]] in win_triangles:
+                                                    not_these.append([x2, y2])
+                                                    not_these_c.append(client_data[y][x])
+
+                for y in range(leng):
+                    for x in range(y + 1):
+                        if client_data[y][x] != 255: continue 
+                        indices = []
+                        for inc in range(len(not_these)):
+                            if not_these[inc] == [x,y]:
+                                indices.append(inc)
+
+                        for i in range(state.number_of_colors):
+                            if state.remaining_stones[i] > 0:
+                                cnt = 0
+                                for j in indices:
+                                    if not_these_c[j] == i:
+                                        break
+                                    cnt += 1
+
+                                    if cnt == len(indices):
+                                        turn_x = x
+                                        turn_y = y
+                                        turn_color = i
+                                        xy_found = True
+                                        print("def")
+                                        break
+                                if(xy_found): break
+                            if(xy_found): break
+                        if(xy_found): break
+                    if(xy_found): break
+                
+            if (not(xy_found)):
+                for i in range(state.number_of_colors):
+                    if state.remaining_stones[i] > 0:
+                        turn_color = i
+                        break
+
+                i = 0
+                xy_found = False
+                for y in range(leng):
+                    for x in range(y + 1):
+                        if state.board_data[i] == 255:
+                            turn_x = x
+                            turn_y = y
+                            xy_found = True
+                            break
+                        i = i+1
+                    if(xy_found): break
+                                                    
             print(turn_x, turn_y, turn_color)
             turn = GameTurn(x=turn_x, y=turn_y, color=turn_color)
             state = submitTurn(turn)
+
+    if status == GameStatus.MATCH_WON: 
+        print("Won.") 
+        global won
+        won += 1
+    if status == GameStatus.MATCH_LOST: 
+        print("Lost.") 
+        global lost
+        lost +=1
+    if status == GameStatus.DRAW: print("Draw.") 
+    if status == GameStatus.MATCH_ABORTED: print("Abort.") 
 
     pass
 
@@ -194,41 +270,51 @@ def findTriangles(leng):
 
     for p in per:
         tril = list(p)
-        x1 = tril[0] // leng
-        y1 = tril[0] % leng
-        x2 = tril[1] // leng
-        y2 = tril[1] % leng
-        x3 = tril[2] // leng
-        y3 = tril[2] % leng
+        y1 = tril[0] // leng
+        x1 = tril[0] % leng
+        y2 = tril[1] // leng
+        x2 = tril[1] % leng
+        y3 = tril[2] // leng
+        x3 = tril[2] % leng
 
         if x1 > y1 or x2 > y2 or x3 > y3:
             continue
 
-        side1 = sqrt((x1 - x2)**2 + (y1-y2)**2)
-        side2 = sqrt((x2 - x3)**2 + (y2-y3)**2)
-        side3 = sqrt((x3 - x1)**2 + (y3-y1)**2)
+        x1_s = x1 + (leng - 1 - y1)/2
+        x2_s = x2 + (leng - 1 - y2)/2
+        x3_s = x3 + (leng - 1 - y3)/2
 
-        tri= [side1, side2, side3]
-        tri.sort()
+        y1_s = y1 - 0.1339760000001133*y1
+        y2_s = y2 - 0.1339760000001133*y2
+        y3_s = y3 - 0.1339760000001133*y3
 
-        if tri[0] < tri[1]+tri[2]:
-            if tri[0] == tri[2]:
-                continue
-            elif tri[1] == tri[2] or tri[1] == tri[0]:
-                if abs(tri[2]**2 - tri[1]**2 - tri[0]**2) < 0.0001:
-                    eql.append([[x1, y1],[x2, y2],[x3, y3]]) 
+        side1 = sqrt((x1_s - x2_s)**2 + (y1_s-y2_s)**2)
+        side2 = sqrt((x2_s - x3_s)**2 + (y2_s-y3_s)**2)
+        side3 = sqrt((x3_s - x1_s)**2 + (y3_s-y1_s)**2)
+
+        if abs(side1 - side2) < 0.00001 and abs(side1 - side3) < 0.00001 and abs(side3 - side2) < 0.00001:
+            eql.append([[x1, y1],[x2, y2],[x3, y3]])
     return eql
 
 
 def main():
-    # getUserToken("INSERT MATR#", "INSERT SECRET") # Please only do this once (ever) and save your userToken somewhere
     print("UserToken:", userToken)
-    newMatch(7, 4)
-    waitMatchStarted()
-    print("Opponent found.")
-    queryOpponentInfo()
-    queryTimeout()
-    autoPlay()
+
+    played = 0
+    while(played < 1):
+        newMatch(7, 4)
+        waitMatchStarted()
+        print("Opponent found.")
+        queryOpponentInfo()
+        queryTimeout()
+        autoPlay()
+        played += 1
+
+        global won
+        global lost
+        global draw
+        global abort
+        print ("Won: ", won, " Draw: ", draw, " Lost: ", lost, " Abort: ", abort)
 
 
 if __name__ == "__main__":
