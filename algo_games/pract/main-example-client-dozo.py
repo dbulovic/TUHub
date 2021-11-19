@@ -97,6 +97,12 @@ def showGameState():
             else: print (slot, end=' ')
         print()
     print()
+    print("Stone | left")
+    print("------------")
+    for i in range(len(state.remaining_stones)):
+        print("  ", i, " | ", state.remaining_stones[i])
+        print("------------")
+    print("============")
     return state, status
 
 
@@ -208,6 +214,14 @@ def autoPlay():
                         for i in range(state.number_of_colors):
                             if state.remaining_stones[i] > 0:
                                 cnt = 0
+                                if indices == []:
+                                    turn_x = x
+                                    turn_y = y
+                                    turn_color = i
+                                    xy_found = True
+                                    print("def")
+                                    break
+
                                 for j in indices:
                                     if not_these_c[j] == i:
                                         break
@@ -246,7 +260,9 @@ def autoPlay():
             print(turn_x, turn_y, turn_color)
             turn = GameTurn(x=turn_x, y=turn_y, color=turn_color)
             state = submitTurn(turn)
-
+    
+    showGameState()
+    
     if status == GameStatus.MATCH_WON: 
         print("Won.") 
         global won
@@ -255,8 +271,14 @@ def autoPlay():
         print("Lost.") 
         global lost
         lost +=1
-    if status == GameStatus.DRAW: print("Draw.") 
-    if status == GameStatus.MATCH_ABORTED: print("Abort.") 
+    if status == GameStatus.DRAW: 
+        print("Draw.") 
+        global draw
+        draw += 1
+    if status == GameStatus.MATCH_ABORTED: 
+        print("Abort.") 
+        global abort
+        abort += 1
 
     pass
 
@@ -299,10 +321,12 @@ def findTriangles(leng):
 
 def main():
     print("UserToken:", userToken)
-
+    size = 3
+    n_colors = 1
+    n_games = 3 # change to how many games you want to play
     played = 0
-    while(played < 1):
-        newMatch(7, 4)
+    while(played < n_games):
+        newMatch(size, n_colors)
         waitMatchStarted()
         print("Opponent found.")
         queryOpponentInfo()
@@ -314,7 +338,8 @@ def main():
         global lost
         global draw
         global abort
-        print ("Won: ", won, " Draw: ", draw, " Lost: ", lost, " Abort: ", abort)
+        print("Played: ",played, "/", n_games)
+        print("Won: ", won, " Draw: ", draw, " Lost: ", lost, " Abort: ", abort)
 
 
 if __name__ == "__main__":
