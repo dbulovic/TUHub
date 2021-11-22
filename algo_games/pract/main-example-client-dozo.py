@@ -97,6 +97,7 @@ def showGameState():
             else: print (slot, end=' ')
         print()
     print()
+    print("____________")
     print("Stone | left")
     print("------------")
     for i in range(len(state.remaining_stones)):
@@ -325,6 +326,10 @@ def main():
     n_colors = 1
     n_games = 3 # change to how many games you want to play
     played = 0
+    global won
+    global lost
+    global draw
+    global abort
     while(played < n_games):
         newMatch(size, n_colors)
         waitMatchStarted()
@@ -332,12 +337,8 @@ def main():
         queryOpponentInfo()
         queryTimeout()
         autoPlay()
-        played += 1
 
-        global won
-        global lost
-        global draw
-        global abort
+        played += 1
         print("Played: ",played, "/", n_games)
         print("Won: ", won, " Draw: ", draw, " Lost: ", lost, " Abort: ", abort)
 
