@@ -148,8 +148,8 @@ def autoPlay():
     client_data = [[198 for i in range(leng)] for i in range(leng)]
 
     while(not(isMatchOver(status))):
-        state, status = showGameState()
         time.sleep(1)
+        state, status = showGameState()
         if isTurnPlayable(status):
             for y in range(leng):
                 for x in range(y+1):
@@ -261,6 +261,7 @@ def autoPlay():
             print(turn_x, turn_y, turn_color)
             turn = GameTurn(x=turn_x, y=turn_y, color=turn_color)
             state = submitTurn(turn)
+            showGameState()
     
     showGameState()
     
@@ -324,7 +325,7 @@ def main():
     print("UserToken:", userToken)
     size = 3
     n_colors = 1
-    n_games = 3 # change to how many games you want to play
+    n_games = 2 # change to how many games you want to play
     played = 0
     global won
     global lost
@@ -341,6 +342,7 @@ def main():
         played += 1
         print("Played: ",played, "/", n_games)
         print("Won: ", won, " Draw: ", draw, " Lost: ", lost, " Abort: ", abort)
+        time.sleep(2)
 
 
 if __name__ == "__main__":
