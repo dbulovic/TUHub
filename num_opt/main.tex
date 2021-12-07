@@ -1,9 +1,10 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{indentfirst}
 
-\title{Numerical Optimization Assignment 1}
+\title{Numerical Optimization Assignment 1 Report}
 \author{David Bulovic, Marko Rajic}
 \date{November 2021}
 
@@ -11,7 +12,7 @@
 
 \maketitle
 
-\section{Task1: Characterization of Functions}
+\section{Characterization of Functions}
 \textbf{a)} $f(\boldsymbol{x}) = (\boldsymbol{a}^T \boldsymbol{x} - d)^2$ where $\boldsymbol{a} = \begin{pmatrix}-1 & 3\end{pmatrix}^T d = 2.5$.\\
 Inserting the values into the equation:
 \begin{equation*}
@@ -25,7 +26,7 @@ We know that the gradient is given by:
 \begin{equation*}
     \nabla f = \begin{pmatrix} \frac{\partial f}{\partial x_1}\\ \frac{\partial f}{\partial x_2}\end{pmatrix}
 \end{equation*}
-Calculating the partial derivatives gives us:
+Calculating the partial derivatives using the chain rule gives us:
 \begin{equation*}
     \frac{\partial f}{\partial x_1} = -2(-x_1 + 3x_2 -2.5)
 \end{equation*}
@@ -38,24 +39,24 @@ Therefore:
 \end{equation*}
 The Hessian matrix is given by:
 \begin{equation*}
-    Hess(f) = \begin{pmatrix} \frac{\partial ^2 f}{\partial x_1^2} & \frac{\partial ^2 f}{\partial x_1x_2}\\ \frac{\partial ^2 f}{\partial x_2^2} & \frac{\partial ^2 f}{\partial x_2x_1}\end{pmatrix}
+    \textbf{H}_f = \begin{pmatrix} \frac{\partial ^2 f}{\partial x_1^2} & \frac{\partial ^2 f}{\partial x_1 \partial x_2}\\ \frac{\partial ^2 f}{\partial x_2 \partial x_1} & \frac{\partial ^2 f}{\partial x_2^2}\end{pmatrix}
 \end{equation*}
 Calculating the second order partial derivatives gives us:
 \begin{equation*}
     \frac{\partial ^2 f}{\partial x_1^2} = 2
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_1x_2} = -6
+    \frac{\partial ^2 f}{\partial x_1 \partial x_2} = -6
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_2x_1} = -6
+    \frac{\partial ^2 f}{\partial x_2 \partial x_1} = -6
 \end{equation*}
 \begin{equation*}
     \frac{\partial ^2 f}{\partial x_2^2} = 18
 \end{equation*}
 And finally:
 \begin{equation*}
-    Hess(f) = \begin{pmatrix} 2 & -6 \\ -6 & 18 \end{pmatrix}
+    \textbf{H}_f = \begin{pmatrix} 2 & -6 \\ -6 & 18 \end{pmatrix}
 \end{equation*}
 Since the two partial derivative equations:
 \begin{equation*}
@@ -68,6 +69,7 @@ are linearly codependent, there are infinitely many stationary points on the lin
 \begin{equation*}
     x_2 = \frac{1}{6}(2x_1 + 5)
 \end{equation*}
+These points are global minima.\\
 
 \textbf{b)} $f(\boldsymbol{x}) = (x_1 - 2)^2 + x_1x_2^2 - 2$\\
 Expanding the equation:
@@ -90,18 +92,18 @@ Calculating the second order partial derivatives gives us:
     \frac{\partial ^2 f}{\partial x_1^2} = 2
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_1x_2} = 2x_2
+    \frac{\partial ^2 f}{\partial x_1 \partial x_2} = 2x_2
 \end{equation*}
 \begin{equation*}
     \frac{\partial ^2 f}{\partial x_2^2} = 2x_1
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_2x_1} = 2x_2
+    \frac{\partial ^2 f}{\partial x_2 \partial x_1} = 2x_2
 \end{equation*}
 And finally:
 \begin{equation}
 \label{1b_hess}
-    Hess(f) = \begin{pmatrix} 2 & 2x_2 \\ 2x_2 & 2x_1 \end{pmatrix}
+    \textbf{H}_f = \begin{pmatrix} 2 & 2x_2 \\ 2x_2 & 2x_1 \end{pmatrix}
 \end{equation}
 To find the stationary points we set the gradient functions to 0:
 \begin{equation*}
@@ -149,11 +151,7 @@ for (0,-2):
 \end{vmatrix}
 = 0 - 16 = -16
 \end{equation*}
-Because the determinant for the point (2, 0) is positive, and:
-\begin{equation*}
-    \frac{\partial ^2 f}{\partial x_1^2} = 2 > 0
-\end{equation*}
-We can conclude that the point (2, 0) is a minimum. The other two stationary points (0, 2) and (0, -2) are saddle points, because the determinants of the Hessian matrix at those points are negative. \\
+Because the determinant for the point (2, 0) is positive, and because the trace of the Hessian Matrix at that point is positive, we can conclude that the point (2, 0) is a minimum. The other two stationary points (0, 2) and (0, -2) are saddle points, because the determinants of the Hessian matrix at those points are negative. \\
 
 \textbf{c)} $f(\boldsymbol{x}) = x_1^2 + x_1||\boldsymbol{x}||^2 + ||\boldsymbol{x}||^2$, where $||\boldsymbol{x}||$ is the \textit{l}2-norm.\\
 Expanding the function for the norm:
@@ -186,18 +184,18 @@ Calculating the second order partial derivatives gives us:
     \frac{\partial ^2 f}{\partial x_1^2} = 6x_1 + 4
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_1x_2} = 2x_2
+    \frac{\partial ^2 f}{\partial x_1 \partial x_2} = 2x_2
 \end{equation*}
 \begin{equation*}
     \frac{\partial ^2 f}{\partial x_2^2} = 2x_1 + 2
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_2x_1} = 2x_2
+    \frac{\partial ^2 f}{\partial x_2 \partial x_1} = 2x_2
 \end{equation*}
 And finally:
 \begin{equation}
 \label{1c_hess}
-    Hess(f) = \begin{pmatrix} 6x_1 + 4 & 2x_2 \\ 2x_2 & 2x_1 + 2 \end{pmatrix}
+    \textbf{H}_f = \begin{pmatrix} 6x_1 + 4 & 2x_2 \\ 2x_2 & 2x_1 + 2 \end{pmatrix}
 \end{equation}
 Setting the partial derivatives to 0:
 \begin{equation*}
@@ -210,7 +208,7 @@ We can reform the second equation:
 \begin{equation*}
     2x_2(x1 + 1) = 0
 \end{equation*}
-Which means partial solutions are: $x_2 = 0$ and $x_1 = -1$. We can insert $x_1 - -1$ into the first equation to get:
+Which means partial solutions are: $x_2 = 0$ and $x_1 = -1$. We can insert $x_1 = -1$ into the first equation to get:
 \begin{equation*}
     3 - 4 + x_2^2 = 0
 \end{equation*}
@@ -279,17 +277,17 @@ Calculating the second order partial derivatives gives us:
     \frac{\partial ^2 f}{\partial x_1^2} = 2\alpha
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_1x_2} = 0
+    \frac{\partial ^2 f}{\partial x_1 \partial x_2} = 0
 \end{equation*}
 \begin{equation*}
     \frac{\partial ^2 f}{\partial x_2^2} = 2\beta
 \end{equation*}
 \begin{equation*}
-    \frac{\partial ^2 f}{\partial x_2x_1} = 0
+    \frac{\partial ^2 f}{\partial x_2 \partial x_1} = 0
 \end{equation*}
 And finally:
 \begin{equation*}
-    Hess(f) = \begin{pmatrix} 2\alpha & 0\\ 0 & 2\beta \end{pmatrix}
+    \textbf{H}_f = \begin{pmatrix} 2\alpha & 0\\ 0 & 2\beta \end{pmatrix}
 \end{equation*}
 Setting the gradient to 0:
 \begin{equation*}
@@ -312,8 +310,73 @@ It is not difficult to see that the solution $(x_1,x_2) = (\frac{1}{\alpha}$, 0)
     \text{If } \alpha < 0 \text{ and } \beta < 0 \text{ then the point } (\frac{1}{\alpha}, 0) \text{ is a maximum.}
 \end{equation*}
 
-\newpage
-\section{Task4: Scheduling Optimization Problem}
+\section{Matrix Calculus}
+\textbf{(a)} $f(x) = \frac{1}{4}||\textbf{x} - \textbf{b}||^4$, where $\textbf{b} \in\mathbb{R}^n$.\\
+\begin{equation*}
+    f(x) = \frac{1}{4}\sqrt{\sum_i (x_i-b_i)^2}^4 = 
+\end{equation*}
+\begin{equation*}
+    f(x) = \frac{1}{4}\left(\sum_i (x_i - b_i)^2\right)^2
+\end{equation*}
+Now the gradient, using the chain rule:
+\begin{equation*}
+    \frac{\partial f}{\partial x_k} = \frac{1}{2}\left(\sum_i (x_i - b_i)^2\right) 2(x_k - b_k)1
+\end{equation*}
+\begin{equation*}
+    \frac{\partial f}{\partial x_k} = \left(\sum_i (x_i - b_i)^2\right) (x_k - b_k)
+\end{equation*}
+Finally the gradient in multivariate form:
+\begin{equation*}
+    \nabla f = ||\textbf{x} - \textbf{b}||^2(\textbf{x} - \textbf{b})
+\end{equation*}
+To calculate the Hessian, we can use the product rule:
+\begin{equation*}
+    \frac{\partial^2 f}{\partial x_k^2} = 2(x_k - b_k)(x_k - b_k) + \left(\sum (x_i - b_i)^2\right)1
+\end{equation*}
+Translating to multivariate form:
+\begin{equation*}
+    \textbf{H}_f = 2(\textbf{x} - \textbf{b})(\textbf{x} - \textbf{b})^T + ||\textbf{x} - \textbf{b}||^2\mathbb{I}
+\end{equation*}\\
+
+\textbf{(b)} $f(\textbf{x}) = \sum_{i=1}g(\textbf{(Ax)}_i)$, for $g(z) = \frac{1}{2}z^2 + z$, $z \in\mathbb{R}$, $\textbf{A}\in\mathbb{R}^{n\times n}$
+\begin{equation*}
+    \sum_{i=1}g(\sum_j a_{i,j}x_{j})=
+\end{equation*}
+
+\begin{equation*}
+    \sum_{i=1}\left[\frac{1}{2}(\sum_j a_{i,j}x_{j})^2 + \sum_j a_{i,j}x_{j}\right]
+\end{equation*}
+
+\begin{equation*}
+    \frac{\partial f}{\partial x_k} = \sum_{i=1}\left[(\sum_j a_{i,j}x_{j})a_{ik} + a_{ik}\right]
+\end{equation*}
+In multivariate form:
+\begin{equation*}
+    \nabla f = \textbf{A}^T(\textbf{Ax} + \textbf{1})
+\end{equation*}
+In this case: $ \textbf{1}\in\mathbb{R}^n$, $1_i = 1$, for every $i \leq n$. From here it is easy to see that the second derivative (Hessian) is:
+\begin{equation*}
+    \textbf{H}_f = \textbf{A}^T\textbf{A}
+\end{equation*}\\
+
+\textbf{(c)} $f(\textbf{x}) = (\textbf{x}\oslash\textbf{b})^T\textbf{D}(\textbf{x}\oslash\textbf{b})$, where $\textbf{b} \in\mathbb{R}^n$, $\textbf{D} \in\mathbb{R}^{n\times n}$.\\
+This function is similar to:
+\begin{equation*}
+    g(\textbf{t}) = \textbf{t}^T\textbf{B}\textbf{t} 
+\end{equation*}
+For functions in this form, we know that:
+\begin{equation*}
+    \nabla g(\textbf{t}) = \textbf{B}\textbf{t} + \textbf{B}^T\textbf{t}
+\end{equation*}
+We can apply this to function $f$:
+\begin{equation*}
+    \nabla f(\textbf{x}) = \textbf{D}(\textbf{x}\oslash\textbf{b})\oslash\textbf{b} + \textbf{D}^T(\textbf{x}\oslash\textbf{b})\oslash\textbf{b}
+\end{equation*}
+
+\section{Numerical Gradient Verification}
+Using the gradient-approximation methods in python (see \textit{main.py} file), it was established that the calculated gradients from the sections 1 and 2 are correct. In the file \textit{figures.pdf} the graphs visually represent the gradient verification.
+
+\section{Scheduling Optimization Problem}
 (a) The linear objective function that we are trying to minimize is:
 \begin{equation}
 \label{tpc}
@@ -355,7 +418,7 @@ Finally, we have to satisfy the constraint that at least 40\% of the first three
 \end{split}
 \end{equation*} \\
 
-(c), (d) Using the python's linear program solver we get the following solution to the problem:
+(c), (d) Using the python's linear program solver we get the following solution to the problem, where the first column denotes the number of instructions performed on the CPU per process, while the second one does the same for the GPU:
 \begin{equation*}
 \begin{pmatrix}
     480 & 720 \\
@@ -369,7 +432,7 @@ Finally, we have to satisfy the constraint that at least 40\% of the first three
 \end{pmatrix}
 \end{equation*}\\
 
-(e) We can see that the solution satisfies all of the constraints above. The sums of rows fit, the sums of columns do not exceed the limit and at least 40\% of the first three processes is executed on the CPU.\\
+(e) We can see that the solution satisfies all of the constraints above. The sums of the rows fit, the sums of the columns do not exceed the limit, and at least 40\% of the first three processes is executed on the CPU.\\
 
 (f) Computing the value of $z$ using the equation \eqref{tpc}, which is the total power consumption, we get $z = 961.8$.\\
 
@@ -382,7 +445,6 @@ Finally, we have to satisfy the constraint that at least 40\% of the first three
     x_{8, 1} = 1300
     \end{split}
 \end{equation*}
-We would get an unsatisfiable problem, because the sum of the instructions required for the processes above is larger than 4500, which is the limit per processing unit.
+We get an unsatisfiable problem(i.e. there is no solution that satisfies all the constraints), because the sum of the instructions required for the processes above is larger than 4500, which is the limit per processing unit.
 
 \end{document}
-

@@ -11,7 +11,6 @@ IMPORTANT:
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-from numpy.lib.function_base import meshgrid
 from scipy.linalg import inv
 from matplotlib.backends.backend_pdf import PdfPages
 from typing import Callable
@@ -168,9 +167,7 @@ def task3():
                 (x**2)*x_solution[8] + (x**2)*y*x_solution[9] + (x**2)*(y**2)*x_solution[10] + (x**2)*(y**3)*x_solution[11] + \
                 (x**3)*x_solution[12] + (x**3)*y*x_solution[13] + (x**3)*(y**2)*x_solution[14] + (x**3)*(y**3)*x_solution[15]
 
-    ax.plot_wireframe(x, y, z)
-
-    print(x_solution)
+    ax.plot_wireframe(x, y, z, color="green")
 
     """ End of your code
     """
