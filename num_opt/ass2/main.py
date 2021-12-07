@@ -11,6 +11,7 @@ IMPORTANT:
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from numpy.lib.function_base import meshgrid
 from scipy.linalg import inv
 from matplotlib.backends.backend_pdf import PdfPages
 from typing import Callable
@@ -54,6 +55,8 @@ def task1():
     def f1(x): return 1/10*x**2-3
     ax[0].plot(x1, f1(x1), "go", markersize=2)
     ax[0].scatter(5, -1/2, color="black", marker="o")
+    ax[0].scatter(5/4 + (505)**(1/2)/4, 5/16 + (505)**(1/2)/16, color="red", marker="o")
+    ax[0].scatter(5/4 - (505)**(1/2)/4, 5/16 - (505)**(1/2)/16, color="red", marker="o")
     ax[0].set_xlim([-7, 7]) 
     ax[0].set_ylim([-7, 7])
 
@@ -67,6 +70,13 @@ def task1():
     x1, x2 = np.meshgrid(np.linspace(-3, 3), np.linspace(-3, 3))
     ax[2].contourf(x1, x2, (x1 - 1)**2 + x1 * x2**2  - 2, 100, cmap='gist_rainbow')
     ax[2].scatter(1, 0, color="blue")
+    ax[2].scatter(0, 2**(1/2), color="red")
+    ax[2].scatter(0, -(2**(1/2)), color="red")
+    ax[2].scatter(1/3*(1 - 7**(1/2)), (-1/3)*((2*(14+7**(1/2)))**(1/2)), color="red")
+    ax[2].scatter(1/3*(1 - 7**(1/2)), (1/3)*((2*(14+7**(1/2)))**(1/2)), color="red")
+    ax[2].scatter(1/3*(1 + 7**(1/2)), (-1/3)*((2*(14-7**(1/2)))**(1/2)), color="red")
+    ax[2].scatter(-2, 0, color="red")
+    ax[2].scatter(2, 0, color="red")
     circle = plt.Circle((0,0), 2, fill=False)
     ax[2].add_patch(circle)
     ax[2].set_xlim([-3, 3])
@@ -87,12 +97,13 @@ def task2():
     fig.suptitle('Task 2 - Contour plots + Constraints + Iterations over k', fontsize=16)
     """ Start of your code
     """
-    x1, x2 = np.meshgrid(np.linspace(-20, 20), np.linspace(-20, 20))
+    size = 15
+    x1, x2 = np.meshgrid(np.linspace(-size, size), np.linspace(-size, size))
     ax.contourf(x1, x2, (x1 - 1)**2 - x1*x2, 100, cmap='gist_rainbow')
     ax.plot(np.linspace(-20, 20), np.linspace(24, -16))
     ax.scatter(3/2, 5/2, color="black", marker="o")
-    ax.set_xlim([-20, 20]) 
-    ax.set_ylim([-20, 20])
+    ax.set_xlim([-size, size]) 
+    ax.set_ylim([-size, size])
 
     lambda_k = -1
     alpha = 0.7
@@ -124,12 +135,42 @@ def task3():
         x = fc['data'][:,0]
         y = fc['data'][:,1]
         z = fc['data'][:,2]
-
+    
     N = len(x)
     A = None
     x_solution = None
     """ Start of your code
     """
+
+    ax.scatter(x, y, z)
+
+    def f(x, y):
+        return [1, y, y**2, y**3, \
+                x, x*y, x*(y**2), x*(y**3), \
+                (x**2), (x**2)*y, (x**2)*(y**2), (x**2)*(y**3), \
+                (x**3), (x**3)*y, (x**3)*(y**2), (x**3)*(y**3)]
+    
+    tmp_arr = []
+    for i in range(N):
+        tmp_arr.append(f(x[i], y[i]))
+    
+    A = np.array(tmp_arr)
+
+    x_solution = inv(A.T@A)@A.T@z
+    
+
+    x1 = np.linspace(-4, 4, 50)
+    y1 = np.linspace(-4, 4, 50)
+    x, y = np.meshgrid(x1,y1)
+
+    z = 1*x_solution[0] + y*x_solution[1] + y**2*x_solution[2] + y**3*x_solution[3] + \
+                x*x_solution[4] + x*y*x_solution[5] + x*(y**2)*x_solution[6] + x*(y**3)*x_solution[7] + \
+                (x**2)*x_solution[8] + (x**2)*y*x_solution[9] + (x**2)*(y**2)*x_solution[10] + (x**2)*(y**3)*x_solution[11] + \
+                (x**3)*x_solution[12] + (x**3)*y*x_solution[13] + (x**3)*(y**2)*x_solution[14] + (x**3)*(y**3)*x_solution[15]
+
+    ax.plot_wireframe(x, y, z)
+
+    print(x_solution)
 
     """ End of your code
     """
