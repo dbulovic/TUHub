@@ -55,6 +55,51 @@ def task1(signal):
     """ Start of your code
     """
 
+    n = len(signal)
+    d = 15
+
+    xtmp = [0 for i in range(d - 1)]
+    xtmp.append(1)
+
+    Atmp = []
+    for i in range(n):
+        tmpr = []
+        for j in range(d):
+            if j + 1 == 1:
+                alph = 1/((n)**(1/2))
+            else: 
+                alph = (2/n)**(1/2)
+            tmpr.append(alph*np.cos(np.pi/n)*(j)*(i + 1/2))
+        Atmp.append(tmpr)
+
+    x = np.array(xtmp)
+    A = np.array(Atmp)
+
+    sigma_sq = 0.01**(2)
+    ns_signal = [0 for i in range(len(signal))]
+    b = np.array(ns_signal)
+    for i in range(len(signal)):
+        b[i] = signal[i] + np.random.normal(0, sigma_sq)
+    
+    def delta_f(x: np.ndarray):
+        return A.T@(A@x - b)
+
+    for k in range(24):
+        deltaf1 = delta_f(x)
+        
+        i = np.argmin(deltaf1)
+
+        ytmp = []
+        for j in range(d):
+            if i == j: ytmp.append(1)
+            else: ytmp.append(0)
+
+        y = np.array(ytmp)
+
+        t = 2/(k+1)
+
+        x = (1-t)*x+t*y
+
     """ End of your code
     """
 
