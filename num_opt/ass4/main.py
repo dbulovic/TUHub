@@ -56,49 +56,79 @@ def task1(signal):
     """
 
     n = len(signal)
-    d = 15
 
-    xtmp = [0 for i in range(d - 1)]
-    xtmp.append(1)
+    def get_A(d):
+        Atmp = []
+        for i in range(n):
+            tmpr = []
+            for j in range(d):
+                if j + 1 == 1:
+                    alph = 1/((n)**(1/2))
+                else: 
+                    alph = (2/n)**(1/2)
+                tmpr.append(alph*np.cos(np.pi/n)*(j)*(i + 1/2))
+            Atmp.append(tmpr)
+        A = np.array(Atmp)
+        return A
 
-    Atmp = []
-    for i in range(n):
-        tmpr = []
-        for j in range(d):
-            if j + 1 == 1:
-                alph = 1/((n)**(1/2))
-            else: 
-                alph = (2/n)**(1/2)
-            tmpr.append(alph*np.cos(np.pi/n)*(j)*(i + 1/2))
-        Atmp.append(tmpr)
+    def get_b(sigma):
+        ns_signal = [0 for i in range(len(signal))]
+        for i in range(len(signal)):
+            ns_signal[i] = signal[i] + np.random.normal(0, sigma)
 
-    x = np.array(xtmp)
-    A = np.array(Atmp)
+        b = np.array(ns_signal)
+        return b
 
-    sigma_sq = 0.01**(2)
-    ns_signal = [0 for i in range(len(signal))]
-    b = np.array(ns_signal)
-    for i in range(len(signal)):
-        b[i] = signal[i] + np.random.normal(0, sigma_sq)
-    
-    def delta_f(x: np.ndarray):
-        return A.T@(A@x - b)
+    # def frst_f(xt:np.ndarray):
+    #     return 1/2*((np.linalg.norm(A@xt - b))**2)
 
-    for k in range(24):
-        deltaf1 = delta_f(x)
-        
-        i = np.argmin(deltaf1)
+    def frank_wolfe(sigma, d, k):
+        xtmp = [1/d for i in range(d)]
+        x = np.array(xtmp)
 
-        ytmp = []
-        for j in range(d):
-            if i == j: ytmp.append(1)
-            else: ytmp.append(0)
+        A = get_A(d)
+        b = get_b(sigma)
 
-        y = np.array(ytmp)
+        for ki in range(k):
+            deltaf1 = A.T@(A@x - b)
+            
+            i = np.argmin(deltaf1)
 
-        t = 2/(k+1)
+            ytmp = []
+            for j in range(d):
+                if i == j: ytmp.append(1)
+                else: ytmp.append(0)
 
-        x = (1-t)*x+t*y
+            y = np.array(ytmp)
+
+            t = 2/(ki+1)
+
+            x = (1-t)*x+t*y
+        return x, A, b
+
+    xa, A, b = frank_wolfe(0.01, 15, 1000)
+    res1 = A@xa
+    ax[0,0].plot(signal)
+    ax[0,0].plot(b)
+    ax[0,0].plot(res1)
+
+    xb, A, b = frank_wolfe(0.03, 15, 1000)
+    res2 = A@xb
+    ax[0,1].plot(signal)
+    ax[0,1].plot(b)
+    ax[0,1].plot(res2)
+
+    xc, A, b = frank_wolfe(0.01, 100, 10000)
+    res3 = A@xc
+    ax[1,0].plot(signal)
+    ax[1,0].plot(b)
+    ax[1,0].plot(res3)
+
+    xd, A, b = frank_wolfe(0.01, 5, 1000)
+    res4 = A@xd
+    ax[1,1].plot(signal)
+    ax[1,1].plot(b)
+    ax[1,1].plot(res4)
 
     """ End of your code
     """
