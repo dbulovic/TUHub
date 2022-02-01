@@ -103,22 +103,21 @@ def task1(signal):
             x = (1-t)*x+t*y
         return A@x
 
-    def proj(v: np.array):
-        v = np.sort(v)
-        v = np.flip(v)
+    def proj(v: np.array, d):
+        vk = np.sort(v)
+        vk = np.flip(v)
         
         p = 0
         for j in range(d):
             tmp = 0
             for l in range (j + 1):
-                tmp += v[l]
-
-            if v[j] + (1/(j+1))*(1 - tmp) > 0:
+                tmp += vk[l]
+            if vk[j] + (1/(j+1))*(1 - tmp) > 0:
                 p += 1
         
         tmp = 0
         for l in range(p):
-            tmp += v[l]
+            tmp += vk[l]
         
         q = (1/p)*(1 - tmp)
 
@@ -139,7 +138,7 @@ def task1(signal):
 
         for i in range(k):
             delta_f = A.T@(A@x - b)
-            x = proj(x - t*delta_f)
+            x = proj(x - t*delta_f, d)
 
         return A@x
 
@@ -147,8 +146,8 @@ def task1(signal):
     sigma = 0.01
     A = get_A(d)
     b = get_b(sigma)
-    res_fw_a = frank_wolfe(d, 1000, A, b)
-    res_gd_a = gd_alg(d, 1000, A, b)
+    res_fw_a = frank_wolfe(d, 30, A, b)
+    res_gd_a = gd_alg(d, 30, A, b)
     ax[0,0].plot(signal, label = 'Clean signal')
     ax[0,0].plot(b, label = 'Signal + noise')
     ax[0,0].plot(res_fw_a, '--', label = 'FW clean')
@@ -159,8 +158,8 @@ def task1(signal):
     sigma = 0.03
     A = get_A(d)
     b = get_b(sigma)
-    res_fw_b = frank_wolfe(d, 1000, A, b)
-    res_gd_b = gd_alg(d, 1000, A, b)
+    res_fw_b = frank_wolfe(d, 30, A, b)
+    res_gd_b = gd_alg(d, 30, A, b)
     ax[0,1].plot(signal, label = 'Clean signal')
     ax[0,1].plot(b, label = 'Signal + noise')
     ax[0,1].plot(res_fw_b, '--', label = 'FW clean')
@@ -171,8 +170,8 @@ def task1(signal):
     sigma = 0.01
     A = get_A(d)
     b = get_b(sigma)
-    res_fw_c = frank_wolfe(d, 1000, A, b)
-    res_gd_c = gd_alg(d, 1000, A, b)
+    res_fw_c = frank_wolfe(d, 30, A, b)
+    res_gd_c = gd_alg(d, 30, A, b)
     ax[1,0].plot(signal, label = 'Clean signal')
     ax[1,0].plot(b, label = 'Signal + noise')
     ax[1,0].plot(res_fw_c, '--', label = 'FW clean')
@@ -183,8 +182,8 @@ def task1(signal):
     sigma = 0.01
     A = get_A(d)
     b = get_b(sigma)
-    res_fw_d = frank_wolfe(d, 1000, A, b)
-    res_gd_d = gd_alg(d, 1000, A, b)
+    res_fw_d = frank_wolfe(d, 30, A, b)
+    res_gd_d = gd_alg(d, 30, A, b)
     ax[1,1].plot(signal, label = 'Clean signal')
     ax[1,1].plot(b, label = 'Signal + noise')
     ax[1,1].plot(res_fw_d, '--', label = 'FW clean')
