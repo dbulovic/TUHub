@@ -31,7 +31,8 @@ object DpTask1 {
   def multPos(ls: List[Int]): Int = ls match
   {
     case Nil => 1
-    case x::tail if x >= 0 => x * multPos(tail)
+    case x::tail if x == 0 => multPos(tail)
+    case x::tail if x > 0 => x * multPos(tail)
     case x::tail if x < 0 => multPos(tail)
   }
 
@@ -132,31 +133,115 @@ object DpTask1 {
 
   // 7.a
 
-  def gcdList(n: Int, m: Int): List[Int] = ???
+  def gcdList(n: Int, m: Int): List[Int] = 
+  {
+    if (m >= n)
+    {
+      n match
+      {
+        case 0 => List[Int]()
+        case _ => m +: gcdList(m - n, n)
+      }
+    }
 
-
+    else
+    {
+      m match
+      {
+        case 0 => List[Int]()
+        case _ => n +: gcdList(n - m, m)
+      }
+    }
+  }
 
   // 7.b
 
-  def gcdList2(n: Int, m: Int): List[Int] = ???
+  def gcdList2(n: Int, m: Int): List[Int] =
+  {
+    @tailrec
+    def gcdList_(n: Int, m: Int, ls: List[Int]): List[Int] = 
+    {
+      if (m >= n)
+      {
+        n match
+        {
+          case 0 => ls
+          case _ => gcdList_(m - n, n, ls :+ m)
+        }
+      }
+
+      else
+      {
+        m match
+        {
+          case 0 => ls
+          case _ => gcdList_(n - m, m, ls :+ n)
+        }
+      }
+    }
+
+    val lst = List[Int]()
+    gcdList_(n, m, lst)
+    
+  }
 
 
 
   // 8.a
 
-  def oddsLessThanEqual2(n: Int): List[Int] = ???
+  def oddsLessThanEqual2(n: Int): List[Int] =
+  {
+    @tailrec
+    def oLETE_(n: Int, ls: List[Int]) : List[Int] = n match
+    {
+      case 0 => ls
+      case x if x < 0 => Nil
+      case x if x % 2 == 0 => oLETE_(x-1, ls)
+      case x if x % 2 == 1 => oLETE_(x-1, ls :+ x)
+    }
 
+    val lst = List[Int]()
+    oLETE_(n, lst)
+  }
 
 
   // 8.b
 
-  def l1Norm2(elems: List[Int]): Int = ???
+  def l1Norm2(elems: List[Int]): Int = 
+  {
+    @tailrec
+    def l1Norm_(elems: List[Int], sum: Int): Int =
+    {
+      elems match 
+      {
+        case Nil => sum
+        case head::tail => l1Norm_(tail, sum+math.abs(head))
+      }
+    }
+    
+    l1Norm_(elems, 0)
+    
+  }
 
 
 
   // 9
 
-  def checkEvenEven(l: List[Int]): Boolean = ???
+  def checkEvenEven(l: List[Int]): Boolean = 
+  {
+    def counter(l: List[Int], b: Boolean, cnt: Int) : Boolean = 
+    l match
+    {
+      case Nil => b
+      case h::t => if (cnt % 2 == 1) counter(t, false, cnt + 1)
+      else
+      {
+        if (h % 2 == 0) counter(t, true, cnt + 1)
+        else false
+      }
+    }
+    counter(l, true, 1)
+  }
 
 
 
@@ -216,7 +301,7 @@ object DpTask1 {
   // Driver Code
   def main(args: Array[String]) 
   {
-    println(addCorrespondingElems(List(7, 3, 9, 1, 11, 10 ), List(2, 2, 2 )))
+    println(checkEvenEven(List()))
   }
 
 }
