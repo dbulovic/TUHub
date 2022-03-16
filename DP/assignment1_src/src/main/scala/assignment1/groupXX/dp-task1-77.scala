@@ -31,9 +31,8 @@ object DpTask1 {
   def multPos(ls: List[Int]): Int = ls match
   {
     case Nil => 1
-    case x::tail if x == 0 => multPos(tail)
     case x::tail if x > 0 => x * multPos(tail)
-    case x::tail if x < 0 => multPos(tail)
+    case x::tail => multPos(tail)
   }
 
 
@@ -46,8 +45,8 @@ object DpTask1 {
     def multPos_(ls: List[Int], mult: Int): Int = ls match
     {
       case Nil => mult
-      case x::tail if x >= 0 => multPos_(tail, x * mult)
-      case x::tail if x < 0 => multPos_(tail, mult)
+      case x::tail if x > 0 => multPos_(tail, x * mult)
+      case x::tail => multPos_(tail, mult)
     }
 
     multPos_(ls, 1)
@@ -96,14 +95,30 @@ object DpTask1 {
 
 
   // 4
-
-  def dropWhile[T](l: List[T], f: T => Boolean): List[T] = ???
+  @tailrec
+  def dropWhile[T](l: List[T], f: T => Boolean): List[T] =
+  {
+    l match
+    {
+      case Nil => Nil
+      case h::t if (f(h)) => dropWhile(t, f)
+      case h::t => l
+    }
+  }
 
 
 
   // 5
-
-  def dropN[T](l: List[T], n: Int): List[T] = ???
+  @tailrec
+  def dropN[T](l: List[T], n: Int): List[T] =
+  {
+    l match
+    {
+      case Nil => Nil
+      case h::t if (n > 0) => dropN(t, n-1)
+      case h::t => l
+    }
+  }
 
 
 
@@ -356,7 +371,29 @@ object DpTask1 {
 
   // 13
 
-  def compareGeneral(xs: List[Int], ys: List[Int], op: (Int, Int) => Boolean): Boolean = ???
+  def compareGeneral(xs: List[Int], ys: List[Int], op: (Int, Int) => Boolean): Boolean = 
+  {
+    def gTHelp(xs: List[Int], ys: List[Int], ydub: List[Int]): Boolean = 
+    {
+      xs match
+      {
+        case Nil => true
+        case xh::xt =>
+        {
+          ys match
+          {
+            case Nil => gTHelp(xt, ydub, ydub)
+            case yh::yt => 
+            {
+              if(op(xh, yh)) gTHelp(xs, yt, ydub)
+              else false
+            }
+          }
+        }
+      }
+    }
+    gTHelp(xs, ys, ys)
+  }
 
 
 
@@ -391,7 +428,9 @@ object DpTask1 {
   // Driver Code
   def main(args: Array[String]) 
   {
-    println(greaterThan(List(), List(1,1,1,1,1,1,1,120)))
+    def f(x: Int, y: Int): Boolean = x<y
+    
+    println(compareGeneral(List(2,5), List(10,20), f))
   }
 
 }
