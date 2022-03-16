@@ -315,12 +315,36 @@ object DpTask1 {
 
   // 14
 
-  def sameElements(xs: List[Int], ys: List[Int]): Boolean = ???
+  def sameElements(xs: List[Int], ys: List[Int]): Boolean = 
+  xs match
+  {
+    case Nil =>
+    {
+      ys match
+      {
+        case Nil => true
+        case yh::yt => false 
+      }
+    }
+    case xh::xt => 
+    {
+      ys match
+      {
+        case Nil => false
+        case yh::yt => 
+        {
+          if (ys contains xh) sameElements(xs.filter(_ != xh), ys.filter(_ != xh))
+          else sameElements(xt, ys)
+        }
+      }
+    }
+  }
+
 
   // Driver Code
   def main(args: Array[String]) 
   {
-    println(mergeSort(List(-1, 2, 3, 1011, -1, 2, 10001, 2, 4, 23, 3, 4,5,6)))
+    println(sameElements(List(), List()))
   }
 
 }
