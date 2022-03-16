@@ -180,9 +180,7 @@ object DpTask1 {
       }
     }
 
-    val lst = List[Int]()
-    gcdList_(n, m, lst)
-    
+    gcdList_(n, m, List[Int]())
   }
 
 
@@ -200,8 +198,7 @@ object DpTask1 {
       case x if x % 2 == 1 => oLETE_(x-1, ls :+ x)
     }
 
-    val lst = List[Int]()
-    oLETE_(n, lst)
+    oLETE_(n, List[Int]())
   }
 
 
@@ -219,8 +216,7 @@ object DpTask1 {
       }
     }
     
-    l1Norm_(elems, 0)
-    
+    l1Norm_(elems, 0) 
   }
 
 
@@ -269,7 +265,30 @@ object DpTask1 {
   }
 
 
-  def merge(left: List[Int], right: List[Int]): List[Int] = ???
+  def merge(left: List[Int], right: List[Int]): List[Int] = 
+  left match
+  {
+    case Nil =>
+    {
+      right match
+      {
+        case Nil => List[Int]()
+        case hr::tr => hr +: merge(left, tr)
+      }
+    }
+    case hl::tl =>
+    {
+      right match
+      {
+        case Nil => hl +: merge(tl, right)
+        case hr::tr =>
+        {
+          if (hl < hr) hl +: merge(tl, right)
+          else hr +: merge(left, tr)
+        }
+      }
+    } 
+  }
 
 
 
@@ -301,7 +320,7 @@ object DpTask1 {
   // Driver Code
   def main(args: Array[String]) 
   {
-    println(checkEvenEven(List()))
+    println(mergeSort(List(-1, 2, 3, 1011, -1, 2, 10001, 2, 4, 23, 3, 4,5,6)))
   }
 
 }
