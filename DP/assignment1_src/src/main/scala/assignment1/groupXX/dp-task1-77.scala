@@ -294,16 +294,63 @@ object DpTask1 {
 
   // 11
 
-  def isPrime(value: Int): Boolean = ???
+  def isPrime(value: Int): Boolean = 
+  {
+    def cnts(x: Int, cnt: Int, nod: Int): Boolean =
+    {
+      cnt match
+      {
+        case _ if cnt == x => true
+        case _ if (x % cnt == 0) => false
+        case _ => cnts(x, cnt+1, nod)
+      }
+    }
+    if (cnts(value, 2, 0)) true else false
+  }
 
 
-  def removePrimes(xs: List[Int], isPrime: Int => Boolean): List[Int] = ???
+  def removePrimes(xs: List[Int], isPrime: Int => Boolean): List[Int] = 
+  {
+    def addNotPrimes(xs: List[Int], isPrime: Int => Boolean, ns: List[Int]): List[Int] = 
+    {
+      xs match
+      {
+        case Nil => ns
+        case h::t if(isPrime(h)) => addNotPrimes(t, isPrime, ns)
+        case h::t => h +: addNotPrimes(t, isPrime, ns)
+      }
+    }
+    addNotPrimes(xs, isPrime, List[Int]())
+  }
 
 
 
   // 12
 
-  def greaterThan(xs: List[Int], ys: List[Int]): Boolean = ???
+  def greaterThan(xs: List[Int], ys: List[Int]): Boolean = 
+  {
+    def gTHelp(xs: List[Int], ys: List[Int], ydub: List[Int]): Boolean = 
+    {
+      xs match
+      {
+        case Nil => true
+        case xh::xt =>
+        {
+          ys match
+          {
+            case Nil => gTHelp(xt, ydub, ydub)
+            case yh::yt => 
+            {
+              if(xh > yh) gTHelp(xs, yt, ydub)
+              else false
+            }
+          }
+        }
+      }
+    }
+    gTHelp(xs, ys, ys)
+  }
+  
 
 
 
@@ -334,7 +381,7 @@ object DpTask1 {
         case yh::yt => 
         {
           if (ys contains xh) sameElements(xs.filter(_ != xh), ys.filter(_ != xh))
-          else sameElements(xt, ys)
+          else false
         }
       }
     }
@@ -344,7 +391,7 @@ object DpTask1 {
   // Driver Code
   def main(args: Array[String]) 
   {
-    println(sameElements(List(), List()))
+    println(greaterThan(List(), List(1,1,1,1,1,1,1,120)))
   }
 
 }
