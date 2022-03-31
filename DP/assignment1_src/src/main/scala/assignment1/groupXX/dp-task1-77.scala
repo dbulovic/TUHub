@@ -2,8 +2,8 @@
 
 // Bitten fügen Sie folgend die Namen der Gruppenpartner ein:
 
-// Gruppensprecher: Max Mustermann, 12345678
-// Mitglied 2: 
+// Gruppensprecher: David Bulovic, 11819382
+// Mitglied 2: Moritz Kofler, 01214869
 // Mitglied 3: 
 
 // Benennen Sie die Datei mit Ihrer vollständigen Gruppennummer (siehe TeachCenter) !
@@ -311,16 +311,16 @@ object DpTask1 {
 
   def isPrime(value: Int): Boolean = 
   {
-    def cnts(x: Int, cnt: Int, nod: Int): Boolean =
+    def cnts(x: Int, cnt: Int): Boolean =
     {
       cnt match
       {
         case _ if cnt == x => true
         case _ if (x % cnt == 0) => false
-        case _ => cnts(x, cnt+1, nod)
+        case _ => cnts(x, cnt+1)
       }
     }
-    if (cnts(value, 2, 0)) true else false
+    if (value != 1 && cnts(value, 2)) true else false
   }
 
 
@@ -332,7 +332,7 @@ object DpTask1 {
       {
         case Nil => ns
         case h::t if(isPrime(h)) => addNotPrimes(t, isPrime, ns)
-        case h::t => h +: addNotPrimes(t, isPrime, ns)
+        case h::t => addNotPrimes(t, isPrime, ns :+ h)
       }
     }
     addNotPrimes(xs, isPrime, List[Int]())
@@ -425,16 +425,12 @@ object DpTask1 {
   }
 
 
-  // Driver Code
+  // test code
   def main(args: Array[String]) 
   {
-    def f(x: Int, y: Int): Boolean = x<y
+    def f(x: Int): Boolean = x > 23
     
-    println(compareGeneral(List(2,5), List(10,20), f))
+    println(removePrimes(List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 60, 144), isPrime))
   }
 
 }
-
-
-
-
