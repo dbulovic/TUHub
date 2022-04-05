@@ -64,8 +64,15 @@ object DpTask2 {
 
   // firstIndex 
   def firstIndex(as: List[Int], s: Int) : Int = {
-    ???
-    // TODO
+    def f(x: Int, y: Int): Int = 
+    {
+      if (x == s) 0
+      else y + 1
+    }
+    
+    val res = as.foldRight(0)(f)
+    if (res == as.length) -1
+    else res
   }
 
 
@@ -90,7 +97,7 @@ object DpTask2 {
   def main(args: Array[String]) 
   {
     // def f(x: Int): Boolean = x % 2 == 0
-    println(scalarMultiplication(List(1,0,1), 4))
+    println(firstIndex(List(4,1,1,1,21,4,23,0), 233))
   }
 
 }
