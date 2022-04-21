@@ -83,21 +83,31 @@ object DpTask2 {
 
   // invertTree
   def invertTree(tree: BTree[Int]): BTree[Int] = {
-    ???
-    // TODO
+    tree match
+    {
+      case Leaf() => Leaf[Int]()
+      case Node(left, e, right) => Node[Int](invertTree(right), e, invertTree(left))
+    }
   }
 
   // treeToSortedList
   def searchTreeToSortedList(tree: BTree[Int]) : List[Int] = {
-    ???
-    // TODO
+    tree match
+    {
+      case Leaf() => List[Int]()
+      case Node(left, e, right) => searchTreeToSortedList(left) ::: e::searchTreeToSortedList(right)      
+    }
   }
 
   // test code
   def main(args: Array[String]) 
   {
-    // def f(x: Int): Boolean = x % 2 == 0
-    println(firstIndex(List(4,1,1,1,21,4,23,0), 233))
+    val leaf = Leaf[Int]()
+    val ll = Node[Int](leaf, 2, leaf)
+    val r = Node[Int](leaf, 7, leaf)
+    val l = Node[Int](ll, 4, leaf)
+    val root = Node[Int](l, 5, r)
+    println(searchTreeToSortedList(root))
   }
 
 }
