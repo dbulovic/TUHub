@@ -1,8 +1,8 @@
-package assignment2.groupXX.leader_election
+package assignment2.group77.leader_election
 
 import akka.actor.typed._
 import akka.actor.typed.scaladsl._
-import assignment2.groupXX.leader_election.Processor.{ProcessMessage, Wakeup}
+import assignment2.group77.leader_election.Processor.{ProcessMessage, Wakeup}
 
 object CoordinatingActor {
 
@@ -24,10 +24,21 @@ object CoordinatingActor {
           coordinate(processes.toList,Nil)
         case ProcessReady(process) =>
           // wait for all processes to be ready and then send out WakeUp messages
-          ???
+          if ((readyProcesses:+process).size == processes.size) 
+          {
+            for(i <- 0 to (readyProcesses:+process).size - 1)
+            {
+              if (i == (readyProcesses:+process).size - 1)
+              (readyProcesses:+process)(i) ! Processor.Wakeup((readyProcesses:+process).size, (readyProcesses:+process)(0))
+              else
+              (readyProcesses:+process)(i) ! Processor.Wakeup((readyProcesses:+process).size, (readyProcesses:+process)(i+1))
+            }
+          }
+          coordinate(processes, readyProcesses:+process)
         case LeaderSelected(processName) =>
-          // print that a leader has been selected and stop all actors
-          ???
+          context.log.info(f"$processName%s is the leader")
+          context.log.info("ending...")
+          Behaviors.stopped
       }
 
   }
