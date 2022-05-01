@@ -26,12 +26,12 @@ object CoordinatingActor {
           // wait for all processes to be ready and then send out WakeUp messages
           if ((readyProcesses:+process).size == processes.size) 
           {
-            for(i <- 0 to (readyProcesses:+process).size - 1)
+            for(i <- 0 to processes.size - 1)
             {
-              if (i == (readyProcesses:+process).size - 1)
-              (readyProcesses:+process)(i) ! Processor.Wakeup((readyProcesses:+process).size, (readyProcesses:+process)(0))
+              if (i == processes.size - 1)
+              processes(i) ! Processor.Wakeup(processes.size, processes(0))
               else
-              (readyProcesses:+process)(i) ! Processor.Wakeup((readyProcesses:+process).size, (readyProcesses:+process)(i+1))
+              processes(i) ! Processor.Wakeup(processes.size, processes(i+1))
             }
           }
           coordinate(processes, readyProcesses:+process)

@@ -9,6 +9,8 @@ libraryDependencies ++= Seq(
 )
 libraryDependencies +=
   "org.scalatest" %% "scalatest" % "3.2.9" % Test
+libraryDependencies +=
+  "ch.qos.logback" % "logback-classic" % "1.2.11"
 lazy val root = (project in file("."))
   .settings(
     name := "assignment2"

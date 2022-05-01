@@ -44,8 +44,8 @@ object Processor {
     if(getNew)
     {
       nextProcess ! Preference(currentPreference)
-      nextProcess ! Counter(0)
     }
+    nextProcess ! Counter(0)
 
     Behaviors.receive { (context, message) =>
     val name = context.self.path.name 
@@ -55,13 +55,19 @@ object Processor {
                                 context.log.info(f"$name%s is turning inactive")
                                 inactive(parent, nextProcess)
                               } 
-                              else active(parent, nrProcesses, nextProcess, currentPreference, true)
+                              else 
+                              {
+                                active(parent, nrProcesses, nextProcess, currentPreference, true)
+                              }
       case Counter(number) => if (number == nrProcesses - 1)
                               {
-                                context.log.info(f"$name%s is the leader")
+                                context.log.info(f"$name%s becomes the leader")
                                 leader(parent, nextProcess, name) 
                               }
-                            else active(parent, nrProcesses, nextProcess, currentPreference, false)
+                              else 
+                              {
+                                active(parent, nrProcesses, nextProcess, currentPreference, false)
+                              }
       case Wakeup(nrProcesses, nextProcess) => context.log.info(name + " already woken up")
                                                 active(parent, nrProcesses, nextProcess, currentPreference, getNew)
                   }}
@@ -71,10 +77,12 @@ object Processor {
   : Behaviors.Receive[ProcessMessage] = Behaviors.receive { (context, message) =>
     val name = context.self.path.name 
     message match {
-      case Preference(value) => nextProcess ! Preference(value)
+      case Preference(value) => 
+        nextProcess ! Preference(value)
         inactive(parent, nextProcess)
       
-      case Counter(value) => nextProcess ! Counter(value+1)
+      case Counter(value) => 
+        nextProcess ! Counter(value+1)
         inactive(parent, nextProcess)
       
       case Wakeup(nrProcesses, nextProcess) => context.log.info(name + " already woken up")

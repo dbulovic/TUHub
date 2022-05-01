@@ -10,6 +10,6 @@ object LEMain extends App {
 
   println("\n" ++ "Coordinator Actor started." ++ "\n")
 
-  coordinator ! CoordinatingActor.StartProcesses(4)
+  coordinator ! CoordinatingActor.StartProcesses(99)
 
 }
